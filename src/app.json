@@ -35,6 +35,7 @@
   },
   "lazyCodeLoading": "requiredComponents",
   "usingComponents": {
+    "authorization": "./components/authorization/authorization",
     "van-cell": "@vant/weapp/cell/index",
     "van-cell-group": "@vant/weapp/cell-group/index",
     "van-icon": "@vant/weapp/icon/index",

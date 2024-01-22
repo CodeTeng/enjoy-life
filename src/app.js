@@ -7,5 +7,11 @@ wx.utils = utils
 wx.http = http
 
 App({
+  token: wx.getStorageSync('token'),
+  refreshToken: wx.getStorageSync('refreshToken'),
+  setToken(key, token) {
+    this[key] = token
+    wx.setStorageSync(key, token)
+  },
   globalData: {},
 })
