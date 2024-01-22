@@ -1,18 +1,26 @@
 // pages/notify/index.ts
 Page({
-
   /**
    * 页面的初始数据
    */
   data: {
-
+    noticeDetail: {}
   },
 
   /**
    * 生命周期函数--监听页面加载
+   * @param 获取页面参数
    */
-  onLoad() {
-
+  onLoad({ id }) {
+    this.getNoticeDetail(id)
+  },
+  async getNoticeDetail(id) {
+    // 检测 id 是否存在
+    if (typeof id === undefined) return
+    const res = await wx.http.get(`/announcement/${id}`)
+    this.setData({
+      noticeDetail: res.data
+    })
   },
 
   /**

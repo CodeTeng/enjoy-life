@@ -1,5 +1,14 @@
 Page({
+  data: {
+    noticeList: []
+  },
   onLoad() {
-    wx.utils.toast('Hello World')
+    this.getNoticeList()
+  },
+  async getNoticeList() {
+    const res = await wx.http.get('/announcement')
+    this.setData({
+      noticeList: res.data
+    })
   }
 })
