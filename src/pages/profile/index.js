@@ -1,66 +1,60 @@
 // pages/profile/index.ts
 Page({
-
-  /**
-   * 页面的初始数据
-   */
   data: {
-
+    userInfo: {}
   },
 
-  /**
-   * 生命周期函数--监听页面加载
-   */
   onLoad() {
-
+    this.getUserInfo()
   },
 
-  /**
-   * 生命周期函数--监听页面初次渲染完成
-   */
-  onReady() {
-
+  async updateNickName(e) {
+    const nickName = e.detail.value
+    if (nickName === '') {
+      wx.utils.toast('昵称不允许为空')
+      return
+    }
+    await wx.http.put('/userInfo', {
+      nickName
+    })
   },
 
-  /**
-   * 生命周期函数--监听页面显示
-   */
-  onShow() {
-
+  async getUserInfo() {
+    const res = await wx.http.get('/userInfo')
+    this.setData({
+      userInfo: res.data
+    })
   },
-
-  /**
-   * 生命周期函数--监听页面隐藏
-   */
-  onHide() {
-
-  },
-
-  /**
-   * 生命周期函数--监听页面卸载
-   */
-  onUnload() {
-
-  },
-
-  /**
-   * 页面相关事件处理函数--监听用户下拉动作
-   */
-  onPullDownRefresh() {
-
-  },
-
-  /**
-   * 页面上拉触底事件的处理函数
-   */
-  onReachBottom() {
-
-  },
-
-  /**
-   * 用户点击右上角分享
-   */
-  onShareAppMessage() {
-
+  async updateAvatar(e) {
+    const avatarUrl = e.detail.avatarUrl
+    // 使用原生上传
+    // wx.uploadFile({
+    //   url: wx.http.baseURL + '/upload',
+    //   header: {
+    //     Authorization: 'Bearer ' + wx.getStorageSync('token')
+    //   },
+    //   name: 'file',
+    //   filePath: avatarUrl,
+    //   formData: {
+    //     type: 'avatar'
+    //   },
+    //   success: res => {
+    //     res.data = JSON.parse(res.data)
+    //     this.setData({
+    //       'userInfo.avatar': res.data.data.url
+    //     })
+    //   }
+    // })
+    // 使用 http 封装模块上传
+    const res = await wx.http.upload('/upload', {
+      name: 'file',
+      filePath: avatarUrl,
+      formData: {
+        type: 'avatar'
+      }
+    })
+    this.setData({
+      'userInfo.avatar': res.data.url
+    })
   }
 })

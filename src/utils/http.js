@@ -3,6 +3,16 @@ import http from 'wechat-http'
 // 基础路径，同时需添加合法请求域名
 http.baseURL = 'https://live-api.itheima.net'
 
+// 请求拦截器
+http.intercept.request = config => {
+  // 不能直接赋值  因为 header 默认为空
+  config.header = {
+    Authorization:  'Bearer '+ wx.getStorageSync('token'),
+    ...config.header
+  }
+  return config
+}
+
 // 响应拦截器，返回核心数据 data
 http.intercept.response = res => {
   if (res.data.code !== 10000) {
