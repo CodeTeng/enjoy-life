@@ -1,66 +1,51 @@
 // house_pkg/pages/locate/index.ts
+import QQMapWX from '../../../libs/qqmap-wx-jssdk'
+
+const qqMap = new QQMapWX({
+  key: ''
+})
+
 Page({
-
-  /**
-   * 页面的初始数据
-   */
   data: {
-
+    list: [],
+    address: ''
   },
-
-  /**
-   * 生命周期函数--监听页面加载
-   */
-  onLoad() {
-
+  search({ latitude, longitude }) {
+    qqMap.search({
+      keyword: '住宅小区',
+      page_size: 5,
+      location: { latitude, longitude },
+      success: res => {
+        this.setData({
+          list: res.data
+        })
+      }
+    })
   },
-
-  /**
-   * 生命周期函数--监听页面初次渲染完成
-   */
-  onReady() {
-
+  getAddressInfo({ latitude, longitude }) {
+    qqMap.reverseGeocoder({
+      location: { latitude, longitude },
+      success: res => {
+        this.setData({
+          address: res.result.address
+        })
+      }
+    })
   },
-
-  /**
-   * 生命周期函数--监听页面显示
-   */
-  onShow() {
-
+  async chooseLocation() {
+    const { name, latitude, longitude } = await wx.chooseLocation()
+    this.setData({
+      address: name
+    })
+    // 重新获取附近的小区
+    this.search({ latitude, longitude })
   },
-
-  /**
-   * 生命周期函数--监听页面隐藏
-   */
-  onHide() {
-
-  },
-
-  /**
-   * 生命周期函数--监听页面卸载
-   */
-  onUnload() {
-
-  },
-
-  /**
-   * 页面相关事件处理函数--监听用户下拉动作
-   */
-  onPullDownRefresh() {
-
-  },
-
-  /**
-   * 页面上拉触底事件的处理函数
-   */
-  onReachBottom() {
-
-  },
-
-  /**
-   * 用户点击右上角分享
-   */
-  onShareAppMessage() {
-
+  async onLoad() {
+    // 获取当前位置
+    const { latitude, longitude } = await wx.getLocation({
+      type: 'gcj02'
+    })
+    this.search({ latitude, longitude })
+    this.getAddressInfo({ latitude, longitude })
   }
 })
