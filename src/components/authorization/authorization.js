@@ -19,6 +19,10 @@ Component({
         // wx.navigateTo({
         //   url: '/pages/login/index'
         // })
+        // 重写页面的生命周期函数
+        page.onLoad = () => {}
+        page.onShow = () => {}
+        page.onReady = () => {}
         // 跳转页面 不保存上次的页面
         wx.redirectTo({
           // 记得后面+  /
