@@ -62,7 +62,7 @@ Page({
       const res = await wx.http.get(`/room/${id}`)
       this.setData({ ...res.data })
       wx.setNavigationBarTitle({
-        title: '编辑房屋信息'
+        title: '修改房屋信息'
       })
     } else {
       // 获取房屋信息数据
