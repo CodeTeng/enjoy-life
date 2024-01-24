@@ -33,7 +33,7 @@
     </view>
   </view>
 </scroll-view>
-<view class="toolbar" bind:tap="goList">
+<view class="toolbar">
   <text class="enjoy-icon icon-check"></text>
   <text class="button-text" bind:tap="submitForm">提交审核</text>
 </view>

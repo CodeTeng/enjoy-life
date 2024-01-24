@@ -3,7 +3,7 @@ import wxValidate from 'wechat-validate'
 Page({
   behaviors: [wxValidate],
   data: {
-    id: '',
+    id: undefined,
     point: '',
     building: '',
     room: '',
@@ -11,31 +11,29 @@ Page({
     gender: 1,
     mobile: '',
     idcardFrontUrl: '',
-    idcardBackUrl: '',
+    idcardBackUrl: ''
   },
   rules: {
     name: [
       { required: true, message: '业主姓名不能为空!' },
-      { pattern: /^[\u4e00-\u9fa5]{2,5}$/, message: '业主姓名只能为中文!' },
+      { pattern: /^[\u4e00-\u9fa5]{2,5}$/, message: '业主姓名只能为中文!' }
     ],
     mobile: [
       { required: true, message: '业主手机号不能为空!' },
-      { pattern: /^1[3-8]\d{9}$/, message: '请填写正确的手机号!' },
+      { pattern: /^1[3-8]\d{9}$/, message: '请填写正确的手机号!' }
     ],
-    idcardFrontUrl: [{ required: true, message: '请上传身份证国徽面!' }],
-    idcardBackUrl: [{ required: true, message: '请上传身份证照片面!' }],
+    idcardFrontUrl: [{ required: true, message: '请上传身份证正面!' }],
+    idcardBackUrl: [{ required: true, message: '请上传身份证国徽面!' }]
   },
   async submitForm() {
     if (!this.validate()) return
     // 小程序和Vue不一样 会添加一些其它数据
     // eslint-disable-next-line no-unused-vars
-    const { __webviewId__, id, ...body } = this.data
-    await wx.http.post('/room', {
-      body
-    })
-    // 回退到列表页 回退4级
+    const { __webviewId__, status, ...body } = this.data
+    await wx.http.post('/room', body)
+    // 回退到列表页 回退4级  有id为编辑
     wx.navigateBack({
-      delta: 4
+      delta: body.id ? 2 : 4
     })
   },
   async uploadPicture(e) {
@@ -58,9 +56,21 @@ Page({
       [type]: res.data.url
     })
   },
-  onLoad({ point, building, room }) {
-    // 获取房屋信息数据
-    this.setData({ point, building, room })
+  async onLoad({ point, building, room, id }) {
+    if (id) {
+      // 修改房屋信息
+      const res = await wx.http.get(`/room/${id}`)
+      this.setData({ ...res.data })
+      wx.setNavigationBarTitle({
+        title: '编辑房屋信息'
+      })
+    } else {
+      // 获取房屋信息数据
+      this.setData({ point, building, room })
+      wx.setNavigationBarTitle({
+        title: '添加房屋信息'
+      })
+    }
   },
   goList() {
     wx.reLaunch({
