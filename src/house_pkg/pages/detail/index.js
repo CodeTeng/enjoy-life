@@ -4,7 +4,6 @@ Page({
   },
 
   onLoad({ id }) {
-    console.log(id)
     this.getRoomDetail(id)
     this.id = id
   },
