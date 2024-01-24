@@ -1,9 +1,5 @@
 // house_pkg/pages/locate/index.ts
-import QQMapWX from '../../../libs/qqmap-wx-jssdk'
-
-const qqMap = new QQMapWX({
-  key: 'F3ZBZ-4Q2LQ-XEG5Z-4552R-75JU3-E2BST'
-})
+import qqMap from '../../../utils/qqmapsdk'
 
 Page({
   data: {
