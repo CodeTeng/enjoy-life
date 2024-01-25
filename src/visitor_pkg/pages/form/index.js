@@ -61,11 +61,11 @@ Page({
   async submitForm() {
     if (!this.validate()) return
     const { houseId, name, gender, mobile, visitDate } = this.data
-    const { id } = await wx.http.post('/visitor', {
+    const { data: { id } } = await wx.http.post('/visitor', {
       houseId, name, gender, mobile, visitDate
     })
     wx.redirectTo({
-      url: '/visitor_pkg/pages/passport/index?id' + id
+      url: '/visitor_pkg/pages/passport/index?id=' + id
     })
   }
 })
